@@ -39,15 +39,10 @@ namespace CreateScripter
                 Console.WriteLine("パスワードを指定してください。");
                 return;
             }
-            if (obj.IsNullOrEmpty())
-            {
-                Console.WriteLine("DBオブジェクトを指定してください。");
-                return;
-            }
 
             try
             {
-                WriteTextToFile(CreateScript(server, db, user, pass, obj), obj + ".sql");
+                CreateScript(server, db, user, pass, obj);
                 Console.WriteLine("出力が完了しました。");
             }
             catch (Exception ex)
@@ -69,7 +64,7 @@ namespace CreateScripter
                 writer.Write(text);
             }
         }
-        static string CreateScript(string serverInstance, string dbName, string login, string password, string obj)
+        static void CreateScript(string serverInstance, string dbName, string login, string password, string obj)
         {
      
             ServerConnection srvConn = new ServerConnection();
@@ -92,85 +87,108 @@ namespace CreateScripter
 
             StringBuilder sb = new StringBuilder();
 
-           foreach (Table dbObj in db.Tables)
+            foreach (Table dbObj in db.Tables)
             {
-                if (dbObj.Name == obj)
+                if ((obj.IsNullOrEmpty()) || (dbObj.Name == obj))
                 {
-                    // Generating script for table tb  
-                    System.Collections.Specialized.StringCollection sc = scrp.Script(new Urn[] { dbObj.Urn });
-                    foreach (string st in sc)
+                    if (!dbObj.IsSystemObject)
                     {
-                        sb.Append(st + "\r\n" + "GO" + "\r\n" + "\r\n");
-                    }
+                        sb.Length = 0;
+                        System.Collections.Specialized.StringCollection sc = scrp.Script(new Urn[] { dbObj.Urn });
+                        foreach (string st in sc)
+                        {
+                            sb.Append(st + "\r\n" + "GO" + "\r\n" + "\r\n");
+                        }
+                        WriteTextToFile(sb.ToString(), dbObj.Schema + "." + dbObj.Name + ".sql");
 
+                    }
                 }
             }
             foreach (View dbObj in db.Views)
             {
-                if (dbObj.Name == obj)
-                {
-                    // Generating script for table tb  
-                    System.Collections.Specialized.StringCollection sc = scrp.Script(new Urn[] { dbObj.Urn });
-                    foreach (string st in sc)
-                    {
-                        sb.Append(st + "\r\n" + "GO" + "\r\n" + "\r\n");
-                    }
 
+                if ((obj.IsNullOrEmpty()) || (dbObj.Name == obj))
+                {
+                    if (!dbObj.IsSystemObject)
+                    {
+                        sb.Length = 0;
+                        System.Collections.Specialized.StringCollection sc = scrp.Script(new Urn[] { dbObj.Urn });
+                        foreach (string st in sc)
+                        {
+                            sb.Append(st + "\r\n" + "GO" + "\r\n" + "\r\n");
+                        }
+                        WriteTextToFile(sb.ToString(), dbObj.Schema + "." + dbObj.Name + ".sql");
+
+                    }
                 }
             }
             foreach (StoredProcedure dbObj in db.StoredProcedures)
             {
-                if (dbObj.Name == obj)
-                {
-                    // Generating script for table tb  
-                    System.Collections.Specialized.StringCollection sc = scrp.Script(new Urn[] { dbObj.Urn });
-                    foreach (string st in sc)
-                    {
-                        sb.Append(st + "\r\n" + "GO" + "\r\n" + "\r\n");
-                    }
 
+                if ((obj.IsNullOrEmpty()) || (dbObj.Name == obj))
+                {
+                    if (!dbObj.IsSystemObject)
+                    {
+                        sb.Length = 0;
+                        System.Collections.Specialized.StringCollection sc = scrp.Script(new Urn[] { dbObj.Urn });
+                        foreach (string st in sc)
+                        {
+                            sb.Append(st + "\r\n" + "GO" + "\r\n" + "\r\n");
+                        }
+                        WriteTextToFile(sb.ToString(), dbObj.Schema + "." + dbObj.Name + ".sql");
+
+                    }
                 }
             }
             foreach (UserDefinedFunction dbObj in db.UserDefinedFunctions)
             {
-                if (dbObj.Name == obj)
-                {
-                    // Generating script for table tb  
-                    System.Collections.Specialized.StringCollection sc = scrp.Script(new Urn[] { dbObj.Urn });
-                    foreach (string st in sc)
-                    {
-                        sb.Append(st + "\r\n" + "GO" + "\r\n" + "\r\n");
-                    }
 
+                if ((obj.IsNullOrEmpty()) || (dbObj.Name == obj))
+                {
+                    if (!dbObj.IsSystemObject)
+                    {
+                        sb.Length = 0;
+                        System.Collections.Specialized.StringCollection sc = scrp.Script(new Urn[] { dbObj.Urn });
+                        foreach (string st in sc)
+                        {
+                            sb.Append(st + "\r\n" + "GO" + "\r\n" + "\r\n");
+                        }
+                        WriteTextToFile(sb.ToString(), dbObj.Schema + "." + dbObj.Name + ".sql");
+
+                    }
                 }
             }
             foreach (UserDefinedTableType dbObj in db.UserDefinedTableTypes)
             {
-                if (dbObj.Name == obj)
+                if ((obj.IsNullOrEmpty()) || (dbObj.Name == obj))
                 {
-                    // Generating script for table tb  
+                    sb.Length = 0;
                     System.Collections.Specialized.StringCollection sc = scrp.Script(new Urn[] { dbObj.Urn });
                     foreach (string st in sc)
                     {
                         sb.Append(st + "\r\n" + "GO" + "\r\n" + "\r\n");
                     }
+                    WriteTextToFile(sb.ToString(), dbObj.Schema + "." + dbObj.Name + ".sql");
+
 
                 }
             }
             foreach (Synonym dbObj in db.Synonyms)
             {
-                if (dbObj.Name == obj)
+
+                if ((obj.IsNullOrEmpty()) || (dbObj.Name == obj))
                 {
-                    // Generating script for table tb  
+                    sb.Length = 0;
                     System.Collections.Specialized.StringCollection sc = scrp.Script(new Urn[] { dbObj.Urn });
                     foreach (string st in sc)
                     {
                         sb.Append(st + "\r\n" + "GO" + "\r\n" + "\r\n");
                     }
+                    WriteTextToFile(sb.ToString(), dbObj.Schema + "." + dbObj.Name + ".sql");
 
                 }
+
             }
-            return sb.ToString();
         }
 
         public static string GetArgumentValue(string[] args, string argumentName)
