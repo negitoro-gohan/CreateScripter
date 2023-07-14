@@ -90,7 +90,7 @@ namespace CreateScripter
 
             foreach (Table dbObj in db.Tables)
             {
-                if ((obj.IsNullOrEmpty()) || (dbObj.Name == obj))
+                if ((obj.IsNullOrEmpty()) || (dbObj.Name.IndexOf(obj, StringComparison.OrdinalIgnoreCase) >= 0))
                 {
                     if (!dbObj.IsSystemObject)
                     {
@@ -111,7 +111,7 @@ namespace CreateScripter
             foreach (View dbObj in db.Views)
             {
 
-                if ((obj.IsNullOrEmpty()) || (dbObj.Name == obj))
+                if ((obj.IsNullOrEmpty()) || (dbObj.Name.IndexOf(obj, StringComparison.OrdinalIgnoreCase) >= 0))
                 {
                     if (!dbObj.IsSystemObject)
                     {
@@ -132,7 +132,7 @@ namespace CreateScripter
             foreach (StoredProcedure dbObj in db.StoredProcedures)
             {
 
-                if ((obj.IsNullOrEmpty()) || (dbObj.Name == obj))
+                if ((obj.IsNullOrEmpty()) || (dbObj.Name.IndexOf(obj, StringComparison.OrdinalIgnoreCase) >= 0))
                 {
                     if (!dbObj.IsSystemObject)
                     {
@@ -153,7 +153,7 @@ namespace CreateScripter
             foreach (UserDefinedFunction dbObj in db.UserDefinedFunctions)
             {
 
-                if ((obj.IsNullOrEmpty()) || (dbObj.Name == obj))
+                if ((obj.IsNullOrEmpty()) || (dbObj.Name.IndexOf(obj, StringComparison.OrdinalIgnoreCase) >= 0))
                 {
                     if (!dbObj.IsSystemObject)
                     {
@@ -173,7 +173,7 @@ namespace CreateScripter
             }
             foreach (UserDefinedTableType dbObj in db.UserDefinedTableTypes)
             {
-                if ((obj.IsNullOrEmpty()) || (dbObj.Name == obj))
+                if ((obj.IsNullOrEmpty()) || (dbObj.Name.IndexOf(obj, StringComparison.OrdinalIgnoreCase) >= 0))
                 {
                     System.Collections.Specialized.StringCollection sc = scrp.Script(new Urn[] { dbObj.Urn });
                     foreach (string st in sc)
@@ -192,7 +192,7 @@ namespace CreateScripter
             foreach (Synonym dbObj in db.Synonyms)
             {
 
-                if ((obj.IsNullOrEmpty()) || (dbObj.Name == obj))
+                if ((obj.IsNullOrEmpty()) || (dbObj.Name.IndexOf(obj, StringComparison.OrdinalIgnoreCase) >= 0))
                 {
                     System.Collections.Specialized.StringCollection sc = scrp.Script(new Urn[] { dbObj.Urn });
                     foreach (string st in sc)

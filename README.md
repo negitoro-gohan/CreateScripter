@@ -9,7 +9,7 @@ usage: CreateScripter
 	 {-db データベース名}
 	 [-user ユーザ名]
 	 [-pass パスワード名]
-	 [-obj DBオブジェクト名]
+	 [-obj DBオブジェクト名(部分一致)]
 	 [-out 出力ファイル名]
 ```
 ```
