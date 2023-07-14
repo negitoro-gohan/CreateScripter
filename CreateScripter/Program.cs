@@ -17,8 +17,9 @@ namespace CreateScripter
             string user = GetArgumentValue(args, "user");
             string pass = GetArgumentValue(args, "pass");
             string obj = GetArgumentValue(args, "obj");
+            string output = GetArgumentValue(args, "out");
 
-           
+
             if (server.IsNullOrEmpty())
             {
                 Console.WriteLine("インスタンスを指定してください。");
@@ -42,7 +43,7 @@ namespace CreateScripter
 
             try
             {
-                CreateScript(server, db, user, pass, obj);
+                CreateScript(server, db, user, pass, obj,output);
                 Console.WriteLine("出力が完了しました。");
             }
             catch (Exception ex)
@@ -64,7 +65,7 @@ namespace CreateScripter
                 writer.Write(text);
             }
         }
-        static void CreateScript(string serverInstance, string dbName, string login, string password, string obj)
+        static void CreateScript(string serverInstance, string dbName, string login, string password, string obj,string output)
         {
      
             ServerConnection srvConn = new ServerConnection();
@@ -93,13 +94,16 @@ namespace CreateScripter
                 {
                     if (!dbObj.IsSystemObject)
                     {
-                        sb.Length = 0;
                         System.Collections.Specialized.StringCollection sc = scrp.Script(new Urn[] { dbObj.Urn });
                         foreach (string st in sc)
                         {
                             sb.Append(st + "\r\n" + "GO" + "\r\n" + "\r\n");
                         }
-                        WriteTextToFile(sb.ToString(), dbObj.Schema + "." + dbObj.Name + ".sql");
+                        if (output.IsNullOrEmpty())
+                        {
+                            WriteTextToFile(sb.ToString(), dbObj.Schema + "." + dbObj.Name + ".sql");
+                            sb.Length = 0;
+                        }
 
                     }
                 }
@@ -111,13 +115,16 @@ namespace CreateScripter
                 {
                     if (!dbObj.IsSystemObject)
                     {
-                        sb.Length = 0;
                         System.Collections.Specialized.StringCollection sc = scrp.Script(new Urn[] { dbObj.Urn });
                         foreach (string st in sc)
                         {
                             sb.Append(st + "\r\n" + "GO" + "\r\n" + "\r\n");
                         }
-                        WriteTextToFile(sb.ToString(), dbObj.Schema + "." + dbObj.Name + ".sql");
+                        if (output.IsNullOrEmpty())
+                        {
+                            WriteTextToFile(sb.ToString(), dbObj.Schema + "." + dbObj.Name + ".sql");
+                            sb.Length = 0;
+                        }
 
                     }
                 }
@@ -129,13 +136,16 @@ namespace CreateScripter
                 {
                     if (!dbObj.IsSystemObject)
                     {
-                        sb.Length = 0;
                         System.Collections.Specialized.StringCollection sc = scrp.Script(new Urn[] { dbObj.Urn });
                         foreach (string st in sc)
                         {
                             sb.Append(st + "\r\n" + "GO" + "\r\n" + "\r\n");
                         }
-                        WriteTextToFile(sb.ToString(), dbObj.Schema + "." + dbObj.Name + ".sql");
+                        if (output.IsNullOrEmpty())
+                        {
+                            WriteTextToFile(sb.ToString(), dbObj.Schema + "." + dbObj.Name + ".sql");
+                            sb.Length = 0;
+                        }
 
                     }
                 }
@@ -147,13 +157,16 @@ namespace CreateScripter
                 {
                     if (!dbObj.IsSystemObject)
                     {
-                        sb.Length = 0;
                         System.Collections.Specialized.StringCollection sc = scrp.Script(new Urn[] { dbObj.Urn });
                         foreach (string st in sc)
                         {
                             sb.Append(st + "\r\n" + "GO" + "\r\n" + "\r\n");
                         }
-                        WriteTextToFile(sb.ToString(), dbObj.Schema + "." + dbObj.Name + ".sql");
+                        if (output.IsNullOrEmpty())
+                        {
+                            WriteTextToFile(sb.ToString(), dbObj.Schema + "." + dbObj.Name + ".sql");
+                            sb.Length = 0;
+                        }
 
                     }
                 }
@@ -162,13 +175,16 @@ namespace CreateScripter
             {
                 if ((obj.IsNullOrEmpty()) || (dbObj.Name == obj))
                 {
-                    sb.Length = 0;
                     System.Collections.Specialized.StringCollection sc = scrp.Script(new Urn[] { dbObj.Urn });
                     foreach (string st in sc)
                     {
                         sb.Append(st + "\r\n" + "GO" + "\r\n" + "\r\n");
                     }
-                    WriteTextToFile(sb.ToString(), dbObj.Schema + "." + dbObj.Name + ".sql");
+                    if (output.IsNullOrEmpty())
+                    {
+                        WriteTextToFile(sb.ToString(), dbObj.Schema + "." + dbObj.Name + ".sql");
+                        sb.Length = 0;
+                    }
 
 
                 }
@@ -178,16 +194,24 @@ namespace CreateScripter
 
                 if ((obj.IsNullOrEmpty()) || (dbObj.Name == obj))
                 {
-                    sb.Length = 0;
                     System.Collections.Specialized.StringCollection sc = scrp.Script(new Urn[] { dbObj.Urn });
                     foreach (string st in sc)
                     {
                         sb.Append(st + "\r\n" + "GO" + "\r\n" + "\r\n");
                     }
-                    WriteTextToFile(sb.ToString(), dbObj.Schema + "." + dbObj.Name + ".sql");
+                    if (output.IsNullOrEmpty())
+                    {
+                        WriteTextToFile(sb.ToString(), dbObj.Schema + "." + dbObj.Name + ".sql");
+                        sb.Length = 0;
+                    }
 
                 }
 
+            }
+            if (!output.IsNullOrEmpty())
+            {
+                WriteTextToFile(sb.ToString(), output);
+                sb.Length = 0;
             }
         }
 

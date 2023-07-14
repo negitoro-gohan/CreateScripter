@@ -5,9 +5,11 @@ SQLServerの定義を出力します
 
 ```
 usage: CreateScripter
-	 -server サーバ名
-	 -user ユーザ名
-	 -db データベース名
-	 -pass パスワード名
-	 -obj DBオブジェクト名
+	 {-server サーバ名}
+	 {-db データベース名}
+	 [-user ユーザ名]
+	 [-pass パスワード名]
+	 [-obj DBオブジェクト名]
+	 [-out 出力ファイル名]
+```
 ```
