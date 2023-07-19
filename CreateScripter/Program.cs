@@ -18,7 +18,7 @@ namespace CreateScripter
             string pass = GetArgumentValue(args, "pass");
             string obj = GetArgumentValue(args, "obj");
             string output = GetArgumentValue(args, "out");
-
+            string kind = GetArgumentValue(args, "kind");
 
             if (server.IsNullOrEmpty())
             {
@@ -43,7 +43,7 @@ namespace CreateScripter
 
             try
             {
-                CreateScript(server, db, user, pass, obj,output);
+                CreateScript(server, db, user, pass, obj,output,kind);
                 Console.WriteLine("出力が完了しました。");
             }
             catch (Exception ex)
@@ -65,7 +65,7 @@ namespace CreateScripter
                 writer.Write(text);
             }
         }
-        static void CreateScript(string serverInstance, string dbName, string login, string password, string obj,string output)
+        static void CreateScript(string serverInstance, string dbName, string login, string password, string obj,string output, string kind)
         {
      
             ServerConnection srvConn = new ServerConnection();
@@ -88,11 +88,128 @@ namespace CreateScripter
 
             StringBuilder sb = new StringBuilder();
 
-            foreach (Table dbObj in db.Tables)
+            if (kind.IsNullOrEmpty() || kind.ToLower() == "t")
             {
-                if ((obj.IsNullOrEmpty()) || (dbObj.Name.IndexOf(obj, StringComparison.OrdinalIgnoreCase) >= 0))
+                foreach (Table dbObj in db.Tables)
                 {
-                    if (!dbObj.IsSystemObject)
+                    if ((obj.IsNullOrEmpty()) || (dbObj.Name.IndexOf(obj, StringComparison.OrdinalIgnoreCase) >= 0))
+                    {
+                        if (!dbObj.IsSystemObject)
+                        {
+                            System.Collections.Specialized.StringCollection sc = scrp.Script(new Urn[] { dbObj.Urn });
+                            foreach (string st in sc)
+                            {
+                                sb.Append(st + "\r\n" + "GO" + "\r\n" + "\r\n");
+                            }
+                            if (output.IsNullOrEmpty())
+                            {
+                                WriteTextToFile(sb.ToString(), dbObj.Schema + "." + dbObj.Name + ".sql");
+                                sb.Length = 0;
+                            }
+
+                        }
+                    }
+                }
+            }
+            if (kind.IsNullOrEmpty() || kind.ToLower() == "v")
+            {
+                foreach (View dbObj in db.Views)
+                {
+
+                    if ((obj.IsNullOrEmpty()) || (dbObj.Name.IndexOf(obj, StringComparison.OrdinalIgnoreCase) >= 0))
+                    {
+                        if (!dbObj.IsSystemObject)
+                        {
+                            System.Collections.Specialized.StringCollection sc = scrp.Script(new Urn[] { dbObj.Urn });
+                            foreach (string st in sc)
+                            {
+                                sb.Append(st + "\r\n" + "GO" + "\r\n" + "\r\n");
+                            }
+                            if (output.IsNullOrEmpty())
+                            {
+                                WriteTextToFile(sb.ToString(), dbObj.Schema + "." + dbObj.Name + ".sql");
+                                sb.Length = 0;
+                            }
+
+                        }
+                    }
+                }
+            }
+            if (kind.IsNullOrEmpty() || kind.ToLower() == "sp")
+            {
+                foreach (StoredProcedure dbObj in db.StoredProcedures)
+                {
+
+                    if ((obj.IsNullOrEmpty()) || (dbObj.Name.IndexOf(obj, StringComparison.OrdinalIgnoreCase) >= 0))
+                    {
+                        if (!dbObj.IsSystemObject)
+                        {
+                            System.Collections.Specialized.StringCollection sc = scrp.Script(new Urn[] { dbObj.Urn });
+                            foreach (string st in sc)
+                            {
+                                sb.Append(st + "\r\n" + "GO" + "\r\n" + "\r\n");
+                            }
+                            if (output.IsNullOrEmpty())
+                            {
+                                WriteTextToFile(sb.ToString(), dbObj.Schema + "." + dbObj.Name + ".sql");
+                                sb.Length = 0;
+                            }
+
+                        }
+                    }
+                }
+            }
+            if (kind.IsNullOrEmpty() || kind.ToLower() == "uf")
+            {
+                foreach (UserDefinedFunction dbObj in db.UserDefinedFunctions)
+                {
+
+                    if ((obj.IsNullOrEmpty()) || (dbObj.Name.IndexOf(obj, StringComparison.OrdinalIgnoreCase) >= 0))
+                    {
+                        if (!dbObj.IsSystemObject)
+                        {
+                            System.Collections.Specialized.StringCollection sc = scrp.Script(new Urn[] { dbObj.Urn });
+                            foreach (string st in sc)
+                            {
+                                sb.Append(st + "\r\n" + "GO" + "\r\n" + "\r\n");
+                            }
+                            if (output.IsNullOrEmpty())
+                            {
+                                WriteTextToFile(sb.ToString(), dbObj.Schema + "." + dbObj.Name + ".sql");
+                                sb.Length = 0;
+                            }
+
+                        }
+                    }
+                }
+            }
+            if (kind.IsNullOrEmpty() || kind.ToLower() == "udt")
+            {
+                foreach (UserDefinedDataType dbObj in db.UserDefinedDataTypes)
+                {
+                    if ((obj.IsNullOrEmpty()) || (dbObj.Name.IndexOf(obj, StringComparison.OrdinalIgnoreCase) >= 0))
+                    {
+                        System.Collections.Specialized.StringCollection sc = scrp.Script(new Urn[] { dbObj.Urn });
+                        foreach (string st in sc)
+                        {
+                            sb.Append(st + "\r\n" + "GO" + "\r\n" + "\r\n");
+                        }
+                        if (output.IsNullOrEmpty())
+                        {
+                            WriteTextToFile(sb.ToString(), dbObj.Schema + "." + dbObj.Name + ".sql");
+                            sb.Length = 0;
+                        }
+
+
+                    }
+                }
+            }
+            if (kind.IsNullOrEmpty() || kind.ToLower() == "s")
+            {
+                foreach (Synonym dbObj in db.Synonyms)
+                {
+
+                    if ((obj.IsNullOrEmpty()) || (dbObj.Name.IndexOf(obj, StringComparison.OrdinalIgnoreCase) >= 0))
                     {
                         System.Collections.Specialized.StringCollection sc = scrp.Script(new Urn[] { dbObj.Urn });
                         foreach (string st in sc)
@@ -106,107 +223,8 @@ namespace CreateScripter
                         }
 
                     }
-                }
-            }
-            foreach (View dbObj in db.Views)
-            {
-
-                if ((obj.IsNullOrEmpty()) || (dbObj.Name.IndexOf(obj, StringComparison.OrdinalIgnoreCase) >= 0))
-                {
-                    if (!dbObj.IsSystemObject)
-                    {
-                        System.Collections.Specialized.StringCollection sc = scrp.Script(new Urn[] { dbObj.Urn });
-                        foreach (string st in sc)
-                        {
-                            sb.Append(st + "\r\n" + "GO" + "\r\n" + "\r\n");
-                        }
-                        if (output.IsNullOrEmpty())
-                        {
-                            WriteTextToFile(sb.ToString(), dbObj.Schema + "." + dbObj.Name + ".sql");
-                            sb.Length = 0;
-                        }
-
-                    }
-                }
-            }
-            foreach (StoredProcedure dbObj in db.StoredProcedures)
-            {
-
-                if ((obj.IsNullOrEmpty()) || (dbObj.Name.IndexOf(obj, StringComparison.OrdinalIgnoreCase) >= 0))
-                {
-                    if (!dbObj.IsSystemObject)
-                    {
-                        System.Collections.Specialized.StringCollection sc = scrp.Script(new Urn[] { dbObj.Urn });
-                        foreach (string st in sc)
-                        {
-                            sb.Append(st + "\r\n" + "GO" + "\r\n" + "\r\n");
-                        }
-                        if (output.IsNullOrEmpty())
-                        {
-                            WriteTextToFile(sb.ToString(), dbObj.Schema + "." + dbObj.Name + ".sql");
-                            sb.Length = 0;
-                        }
-
-                    }
-                }
-            }
-            foreach (UserDefinedFunction dbObj in db.UserDefinedFunctions)
-            {
-
-                if ((obj.IsNullOrEmpty()) || (dbObj.Name.IndexOf(obj, StringComparison.OrdinalIgnoreCase) >= 0))
-                {
-                    if (!dbObj.IsSystemObject)
-                    {
-                        System.Collections.Specialized.StringCollection sc = scrp.Script(new Urn[] { dbObj.Urn });
-                        foreach (string st in sc)
-                        {
-                            sb.Append(st + "\r\n" + "GO" + "\r\n" + "\r\n");
-                        }
-                        if (output.IsNullOrEmpty())
-                        {
-                            WriteTextToFile(sb.ToString(), dbObj.Schema + "." + dbObj.Name + ".sql");
-                            sb.Length = 0;
-                        }
-
-                    }
-                }
-            }
-            foreach (UserDefinedTableType dbObj in db.UserDefinedTableTypes)
-            {
-                if ((obj.IsNullOrEmpty()) || (dbObj.Name.IndexOf(obj, StringComparison.OrdinalIgnoreCase) >= 0))
-                {
-                    System.Collections.Specialized.StringCollection sc = scrp.Script(new Urn[] { dbObj.Urn });
-                    foreach (string st in sc)
-                    {
-                        sb.Append(st + "\r\n" + "GO" + "\r\n" + "\r\n");
-                    }
-                    if (output.IsNullOrEmpty())
-                    {
-                        WriteTextToFile(sb.ToString(), dbObj.Schema + "." + dbObj.Name + ".sql");
-                        sb.Length = 0;
-                    }
-
 
                 }
-            }
-            foreach (Synonym dbObj in db.Synonyms)
-            {
-
-                if ((obj.IsNullOrEmpty()) || (dbObj.Name.IndexOf(obj, StringComparison.OrdinalIgnoreCase) >= 0))
-                {
-                    System.Collections.Specialized.StringCollection sc = scrp.Script(new Urn[] { dbObj.Urn });
-                    foreach (string st in sc)
-                    {
-                        sb.Append(st + "\r\n" + "GO" + "\r\n" + "\r\n");
-                    }
-                    if (output.IsNullOrEmpty())
-                    {
-                        WriteTextToFile(sb.ToString(), dbObj.Schema + "." + dbObj.Name + ".sql");
-                        sb.Length = 0;
-                    }
-
-                }
-
             }
             if (!output.IsNullOrEmpty())
             {
