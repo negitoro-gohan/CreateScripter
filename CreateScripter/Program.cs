@@ -30,16 +30,7 @@ namespace CreateScripter
                 Console.WriteLine("データベースを指定してください。");
                 return;
             }
-            if (user.IsNullOrEmpty())
-            {
-                Console.WriteLine("ユーザーを指定してください。");
-                return;
-            }
-            if (pass.IsNullOrEmpty())
-            {
-                Console.WriteLine("パスワードを指定してください。");
-                return;
-            }
+
 
             try
             {
@@ -70,9 +61,16 @@ namespace CreateScripter
      
             ServerConnection srvConn = new ServerConnection();
             srvConn.ServerInstance = serverInstance;   // connects to named instance  
-            srvConn.LoginSecure = false;   // set to true for Windows Authentication  
-            srvConn.Login = login;
-            srvConn.Password = password;
+            if (login.IsNullOrEmpty() || password.IsNullOrEmpty())
+            {
+                srvConn.LoginSecure = true;
+            }
+            else
+            {
+                srvConn.LoginSecure = false;   // set to true for Windows Authentication  
+                srvConn.Login = login;
+                srvConn.Password = password;
+            }
             Server srv = new Server(srvConn);
 
             // Reference the database.    
